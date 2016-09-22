@@ -4,8 +4,12 @@ import pandas as pd
 # In[2]:
 CSVFileList = []
 NanPHDTagList = []
-CSVPath1 = '/Users/jvivas/Dropbox/Mtell Customer Projects/' \
-            'XOM BayTown RHC MEA Tower Foaming/Sensor Data'
+# mac Path
+# CSVPath1 = '/Users/jvivas/Dropbox/Mtell Customer Projects/' \
+#             'XOM BayTown RHC MEA Tower Foaming/Sensor Data'
+
+# Windows Path
+CSVPath1 = 'C:/Mtell/Projects/XOM Baytown POC/Sesor Data/Sensor Data'
 
 # CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
 
