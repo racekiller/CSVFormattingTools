@@ -3,14 +3,18 @@ import pandas as pd
 
 SegmentList = []
 NanPHDTagList = []
-# CSVPath1 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 ' \
-#            'Live Monitoring/Sensor Data/System 1 Data/Wave ' \
-#            '1/P5280/Missed SYSTEM1 Tag 2012 to 2016'
-# CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
 
-CSVPath1 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data' \
-           '/Received/Phase 1 - 2015-2016/Recip Comp/Second Part/C-457'
-CSVPath2 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
+# Mac Path
+CSVPath1 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 ' \
+           'Live Monitoring/Sensor Data/System 1 Data/Wave ' \
+           '2/Daniel/System 1 - Phase 2 Pump P8232/2015 to 2016'
+CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
+
+# Windows Path
+# CSVPath1 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data' \
+#            '/Received/Phase 1 - 2015-2016/Recip Comp/Second Part/C-457'
+# CSVPath2 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
+
 
 SegmentFileList = listdir(CSVPath1)
 m = len(SegmentFileList)
