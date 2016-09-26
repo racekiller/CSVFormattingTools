@@ -56,7 +56,7 @@ for i in range(n):
 
     # In[63]:
     # Rename DATE column to DATETIME
-    df=df.rename(columns = {'DATE':'DATETIME'})
+    df = df.rename(columns={'DATE':'DATETIME'})
 
     print('Exporting New Formatted CSV file')
     print("")
