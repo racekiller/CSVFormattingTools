@@ -9,7 +9,8 @@ NanPHDTagList = []
 #             'XOM BayTown RHC MEA Tower Foaming/Sensor Data'
 
 # Windows Path
-CSVPath1 = 'C:/Mtell/Projects/XOM Baytown POC/Sesor Data/Sensor Data'
+CSVPath1 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BayTown RHC MEA Tower Foaming/Sensor Data/' \
+           'To be Processed'
 
 # CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
 
@@ -30,36 +31,40 @@ for i in range(n):
     print("Loading Segment: %s" % CSVFileList[i])
 
     # In[43]:
-
-    df = pd.read_csv(csvfile, index_col=False,sep=',', low_memory=False)
+    df = pd.read_csv(csvfile, index_col=False, sep=',', low_memory=False)
 
     # In[44]:
-    # Concante DATE and TIME Colum
-    df['datetime'] = df['DATE'] + ' ' + df['TIME']
+    # Concatenate DATE and TIME Column
+    df['DATETIME2'] = df['DATE'] + ' ' + df['TIME']
 
+    # Replace the "-" in case datetime is following format: "05-Jan-2015"
+    df['DATETIME2'].replace({'-': ''}, inplace=True, regex=True)
     # In[51]:
     # Change new datetime column to datetime format
-    df['datetime'] = pd.to_datetime(df['datetime'])
+    df['DATETIME2'] = pd.to_datetime(df['DATETIME2'], format="%d%b%y %H:%M:%S")
 
     # In[53]:
     # Change datetime column format to look like 01/31/2015 0:00:00
-    df['datetime'] = df.datetime.dt.strftime('%m/%d/%Y %H:%M:%S')
+    df['DATETIME2'] = df['DATETIME2'].dt.strftime('%m/%d/%Y %H:%M:%S')
 
     # In[59]:
     # Work around to move datetime column to be the first column in the dataset
-    df['DATE'] = df['datetime']
+    df['DATE'] = df['DATETIME2']
+
+    # In[63]:
+    # Rename DATE column to DATETIME
+    df = df.rename(columns={'DATE': 'DATETIME'})
 
     # In[61]:
     # Delete unnecessary columns
     del df['TIME']
-    del df['datetime']
-
-    # In[63]:
-    # Rename DATE column to DATETIME
-    df = df.rename(columns={'DATE':'DATETIME'})
+    del df['DATETIME2']
 
     print('Exporting New Formatted CSV file')
     print("")
 
     # Exporting PHD Tag CSV file
-    df.to_csv(CSVPath1 + '/' + str(CSVFileList[i]) + '_' + 'Formatted' + '.csv', index=False)
+    df.to_csv(CSVPath1 + '/' + 'Formatted_' + str(CSVFileList[i]), index=False)
+
+    #
+    del df
