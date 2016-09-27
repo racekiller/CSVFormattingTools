@@ -60,14 +60,22 @@ for i in range(n):
     del df['TIME']
     del df['DATETIME2']
 
-    # Delete Description Row
-    df.drop(df.index[[0]])
+    # Code to do Transposing
+    # Create two dataframes df1 only with tags and descriptions. df2 tag with values
+    df1 = df[0:1]  # FIRST ROW
+    df2 = df[1:len(df)]  # SECOND TO LAST ROW
 
-    # Transpose dataframe
-    df = pd.melt(df, id_vars=['DATETIME'], var_name=['TagName'], value_name='Value')
+    # Converting Historian files to VTQ format (DATETIME, TAGNAME, DESCRIPTION, VALUE)
+    mdf = pd.merge(pd.melt(df1, id_vars=['DATETIME'], var_name='TAGNAME',
+                           value_name='DESCRIPTION')[['TAGNAME', 'DESCRIPTION']],
+                   pd.melt(df2, id_vars=['DATETIME'], var_name='TAGNAME',
+                           value_name='VALUE'), on=['TAGNAME'])
 
-    print('Exporting New Formatted CSV file')
+    # Sort columns by VTQ format
+    mdf = mdf[['DATETIME', 'TAGNAME', 'DESCRIPTION', 'VALUE']]
+
+    print('Exporting ' + CSVFileList[i] + 'Historian File')
     print("")
 
     # Exporting PHD Tag CSV file
-    df.to_csv(CSVPath1 + '/' + 'Formatted_' + str(CSVFileList[i]), index=False)
+    mdf.to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted.csv', index=False)
