@@ -60,11 +60,11 @@ for i in range(n):
     del df['TIME']
     del df['DATETIME2']
 
+    #Transpose dataframe but need to delete de DESCRIPTION row
+    df2 = pd.melt(df, id_vars=['DATETIME'], var_name=['TagName'], value_name='Value')
+
     print('Exporting New Formatted CSV file')
     print("")
 
     # Exporting PHD Tag CSV file
     df.to_csv(CSVPath1 + '/' + 'Formatted_' + str(CSVFileList[i]), index=False)
-
-    #
-    del df
