@@ -6,16 +6,16 @@ import math
 CSVFileList = []
 NanPHDTagList = []
 # mac Path
-# CSVPath1 = '/Users/jvivas/Dropbox/Mtell Customer Projects/' \
-#             'XOM BayTown RHC MEA Tower Foaming/Sensor Data'
+CSVPath1 =  '/Users/jvivas/Documents/XMT Baytwon Sensor Data' \
+            '/Sensor Data/Testing'
+
+# CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
 
 # Windows Path
 #CSVPath1 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BayTown RHC MEA Tower Foaming/Sensor Data/' \
 #           'To be Processed'
            
-CSVPath1 = 'C:/Mtell/Projects/XOM Baytown POC/Sesor Data/Testing'
-
-# CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
+# CSVPath1 = 'C:/Mtell/Projects/XOM Baytown POC/Sesor Data/Testing'
 
 # In[3]:
 CSVFileListAll = listdir(CSVPath1)
@@ -56,7 +56,7 @@ for i in range(n):
     # In[51]:
     # Change new datetime column to datetime format
     # df['DATETIME2'] = pd.to_datetime(df['DATETIME2'], format="%d%b%y %H:%M:%S")
-    df['DATETIME2'] = pd.to_datetime(df.iloc[2:len(df),len(df.columns)-1], format="%d%b%y %H:%M:%S")
+    df['DATETIME2'] = pd.to_datetime(df.iloc[1:len(df),len(df.columns)-1], format="%d%b%y %H:%M:%S")
     
     # In[53]:
     # Change datetime column format to look like 01/31/2015 0:00:00
