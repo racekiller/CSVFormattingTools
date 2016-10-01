@@ -110,18 +110,21 @@ for i in range(n):
     totalRows = len(mdf)
     loops = math.ceil(totalRows/rows) + 1
     
-     j in         range(loops): #need to round this
+    for j in range(loops): #need to round this
         a = (rows*j) - rows        
-      for  if (rows*j) >= totalRows:
+        if totalRows <= rows:
             b = totalRows           
             print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' Historian File')
             print("")
-            if totalRows <= rows:
-                mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted.csv', index=False)
-            else:
-                mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
+            mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted.csv', index=False)        
         else:
-            b = (rows*j) - 1            
-            print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' chunk' + str(j) + ' Historian File')
-            print("")            
-            mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
+            if (rows*j) >= totalRows:
+                b = totalRows           
+                print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' chunk' + str(j) + ' Historian File')
+                print("")                
+                mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
+            else:
+                b = (rows*j) - 1            
+                print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' chunk' + str(j) + ' Historian File')
+                print("")            
+                mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
