@@ -1,6 +1,7 @@
 # In[1]:
 from os import listdir
 import pandas as pd
+import math
 # In[2]:
 CSVFileList = []
 NanPHDTagList = []
@@ -97,15 +98,30 @@ for i in range(n):
     # Converting Historian files to VTQ format (DATETIME, TAGNAME, DESCRIPTION, VALUE)
     mdf = pd.merge(pd.melt(df1, id_vars=['DATETIME'], var_name='TAGNAME',
                            value_name='DESCRIPTION')[['TAGNAME', 'DESCRIPTION']],
-                   pd.melt(df2, id_vars=['DATETIME'], var_name='TAGNAME',
+                   pd.melt(df2, id_vars=['DATETIME'],  var_name='TAGNAME',
                            value_name='VALUE'), on=['TAGNAME'])
 
     # Sort columns by VTQ format
     mdf = mdf[['DATETIME', 'TAGNAME', 'DESCRIPTION', 'VALUE']]
 
-    print('Exporting ' + CSVFileList[i] + 'Historian File')
-    print("")
-
     # Exporting PHD Tag CSV file
-    for j in range(len(mdf))/999999: #need to round this
-        mdf[j:999999].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted.csv', index=False)
+    j = 1
+    rows = 1000000
+    totalRows = len(mdf)
+    loops = math.ceil(totalRows/rows) + 1
+    
+     j in         range(loops): #need to round this
+        a = (rows*j) - rows        
+      for  if (rows*j) >= totalRows:
+            b = totalRows           
+            print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' Historian File')
+            print("")
+            if totalRows <= rows:
+                mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted.csv', index=False)
+            else:
+                mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
+        else:
+            b = (rows*j) - 1            
+            print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' chunk' + str(j) + ' Historian File')
+            print("")            
+            mdf[a:b].to_csv(CSVPath1 + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
