@@ -6,8 +6,8 @@ import math
 CSVFileList = []
 NanPHDTagList = []
 # mac Path
-CSVPath1 =  '/Users/jvivas/Documents/XMT Baytwon Sensor Data' \
-            '/Sensor Data/Testing'
+#CSVPath1 =  '/Users/jvivas/Documents/XMT Baytwon Sensor Data' \
+#            '/Sensor Data/Testing'
 
 # CSVPath2 = '/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BMT Phase 2 Live Monitoring/Sensor Data/System 1 Data'
 
@@ -15,7 +15,7 @@ CSVPath1 =  '/Users/jvivas/Documents/XMT Baytwon Sensor Data' \
 #CSVPath1 = 'C:/Users/jvivas/Dropbox/Mtell Customer Projects/XOM BayTown RHC MEA Tower Foaming/Sensor Data/' \
 #           'To be Processed'
            
-# CSVPath1 = 'C:/Mtell/Projects/XOM Baytown POC/Sesor Data/Testing'
+CSVPath1 = 'C:/Mtell/Projects/XOM Baytown POC/Sensor Data/ToBeFormatted'
 
 # In[3]:
 CSVFileListAll = listdir(CSVPath1)
@@ -38,11 +38,10 @@ for i in range(n):
     df = pd.read_csv(csvfile, index_col=False, sep=',', low_memory=False)
 
     # In[100]:
-    # Here we add [UNIT] to the description
-    x = 2   
-    for x in range(len(df.columns)):
-        if (df.iloc[1][x] != ' ') and (df.iloc[1][x] != '-') and (df.iloc[1][x] != 'NONE'):
-            df.iloc[0][x] = df.iloc[0][x] + ' [' + df.iloc[1][x] + ']'
+    # Here we add [UNIT] to the description  
+    for x in range(len(df.columns)-2):
+        if (df.iloc[1][x+2] != ' ') and (df.iloc[1][x+2] != '-') and (df.iloc[1][x+2] != 'NONE'):
+            df.iloc[0][x+2] = df.iloc[0][x+2] + ' [' + df.iloc[1][x+2] + ']'
     
     # Here we remove the row #1 which is the UNIT row    
     df = df.drop(df.index[[1]])
