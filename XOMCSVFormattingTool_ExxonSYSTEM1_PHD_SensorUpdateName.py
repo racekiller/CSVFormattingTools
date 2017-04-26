@@ -1,14 +1,15 @@
+# latest update
+# April 26, 2017
+# Changes done by: Jimmy Vivas
+
+# Added comments to the code
+
 # This code was developed by Jimmy Vivas
 # The purpose of this code is to change the sensor name from SYSTEM1 to the PHD Historian.
 # The code will take all CSv files from a specific directory
 # each file must be one sensor
 # each file should has the name of the sensor from SYSTEM1
 # the code will fix the date and time and will add the description and update the sensor name as well.
-
-# latest update
-# April 26, 2017
-# Changes done by: Jimmy Vivas
-# Added comments to the code
 
 from os import listdir
 import pandas as pd
