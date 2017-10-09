@@ -12,6 +12,11 @@
 
 # Find below all functions used in DataWranglingTool
 
+from os import listdir
+import pandas as pd
+import math
+import numpy as np
+
 # In[0]:
 
 def GetCSVList(CSVPath1):
@@ -265,7 +270,7 @@ def FormatToPrevise(df2_1, df2_2):
 
 # In[9]:
 
-def SplitPreviseFormatCSVFile(mdf):
+def SplitPreviseFormatCSVFile(mdf,CSVFileList,FinalPath):
     # Exporting PHD Tag CSV file
     i = 0
     rows = 1000000
@@ -297,3 +302,8 @@ def SplitPreviseFormatCSVFile(mdf):
         mdf.to_csv(FinalPath + '/' + str(CSVFileList[0].replace('.csv', '')) + '_Formatted' + '.csv', index=False)
     return
 
+# In[10]:
+    
+def ReplaceStrings(df2_2,StringListDict):
+    df2_2.replace(StringListDict, inplace=True, regex=True)
+    return(df2_2)
