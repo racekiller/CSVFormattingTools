@@ -43,7 +43,7 @@ def GetFileSize(file):
     import os
     csvFileStatInfo = os.stat(file)
     csvFileSizeGB = csvFileStatInfo.st_size/1000000000
-    return(csvFileSizeGB)    
+    return(csvFileSizeGB)
 
 
 # In[2]:
@@ -59,10 +59,10 @@ def RenameColumn(df2):
 
 def ApplyDateFormat(df2):
 
-    # duplicate df2 to apply date and time format 
-    df2 = df2.copy()    
+    # duplicate df2 to apply date and time format
+    df2 = df2.copy()
     # Change new datetime column to datetime format
-    df2['DATETIME'] = pd.to_datetime(df2['DATETIME'])    
+    df2['DATETIME'] = pd.to_datetime(df2['DATETIME'])
     # Change datetime column format to look like 01/31/2015 0:00:00
     df2['DATETIME'] = df2['DATETIME'].dt.strftime('%m/%d/%Y %H:%M:%S')
     return
@@ -75,19 +75,19 @@ def SplitCSVFile_GetStrings(CSVFileWithPath, CSVFile):
 
     i = 0
     j = 1
-    
+
     SensorStringListAllChunks = []
     StringListForAllSensors = []
     StringListForEachChunk = []
-        
+
     print ('Loading ' + CSVFile + ' file')
     for df in pd.read_csv(CSVFileWithPath, chunksize=chunksize, iterator=True, low_memory=False):
-        # df = df.rename(columns={c: c.replace(' ', '') for c in df.columns}) 
+        # df = df.rename(columns={c: c.replace(' ', '') for c in df.columns})
         df.index += j
         i+=1
         j = df.index[-1] + 1
         h = 0
-        
+
         # Rename date and time column
         print ('Renaming date and time column')
         RenameColumn(df)
@@ -105,21 +105,21 @@ def SplitCSVFile_GetStrings(CSVFileWithPath, CSVFile):
         else:
             if i > 1:
                 df1 = df1
-                
+
         df2 = df[1:len(df)]  # SECOND TO LAST ROW
 
         # Indexing dataframe df2
         df2 = df2.set_index('DATETIME')
-        
+
         # Export CSV chunk for each loop
         print ('Exporting chunk' + str(i))
         df.to_csv(CSVFileWithPath.replace('.csv', '') + '_chunk_ ' + str(i) + '.csv', index=True)
-        
+
         print ('Getting the list for chunk' + str(i))
         StringListForEachChunk = ExtractStrings(df1, df2)
-        
+
         print ('These are all the strings found in the chunk ' + str(i) + ':' + str(StringListForEachChunk))
-        
+
         SensorStringListAllChunks.extend(StringListForEachChunk)
 
     SensorStringListAllChunks = list(set(SensorStringListAllChunks))
@@ -129,7 +129,7 @@ def SplitCSVFile_GetStrings(CSVFileWithPath, CSVFile):
 # In[5]:
 
 def ExtractStrings(df2_1, df2_2):
-        
+
     print ('Converting df to numeric')
     # Convert columns to numbers those that has string wil be converted to numpy null = NaN
     df2_with_nan = df2_2.apply(lambda x: pd.to_numeric(x, errors='coerce'))
@@ -139,19 +139,19 @@ def ExtractStrings(df2_1, df2_2):
     df3 = pd.DataFrame(df2_with_nan.isnull().any(axis=0))
     df3 = df3.reset_index()
     SensorsWithStrings = df3[df3[0]==True]['index'].tolist()
-    
+
     # Replace nan with 'null' and create new df
     df2_with_null = df2_with_nan.fillna(value='null')
-    
+
     # Here we filter the columns that are objects and create a dataframe with those columns
     colsObject = df2_2.select_dtypes(include=['object']).columns
     TotalColumns = df2_2.columns
-    
+
     print ('Total columns with text: ' + str(TotalColumns))
     print ('Sensors with text in their Values: ' + str(SensorsWithStrings))
 
     AllSensorsStringList = []
-    
+
     if len(SensorsWithStrings) == 0:
         print ('No strings in this dataframe')
     else:
@@ -162,7 +162,7 @@ def ExtractStrings(df2_1, df2_2):
         # Dropping DATETIME index to merge df1 and df2
         df2_1 = df2_1.reset_index(drop=False)
         df2_2 = df2_2.reset_index(drop=False)
-        
+
         # Variable initialization
         j = 0
 
@@ -170,8 +170,8 @@ def ExtractStrings(df2_1, df2_2):
 
         # Create dictionary from dataframe columns (sensors) that have strings only
         SensorDictionary = {}.fromkeys(SensorsWithStrings, [])
-        
-        # Loop to go thru each column and convert the characters string to numbers    
+
+        # Loop to go thru each column and convert the characters string to numbers
         for j in range(len(SensorsWithStrings)):
             # from IPython.core.debugger import Tracer
             # Tracer()() #this one triggers the debugger
@@ -191,7 +191,7 @@ def ExtractStrings(df2_1, df2_2):
             # Convert list of nulls to dataframe and reset the datetime index
             result_df = pd.DataFrame(result)
             result_df = result_df.reset_index()
-            
+
             # print ('printing result_df')
             # print (result_df.head())
             # print ('printing df2_2')
@@ -207,11 +207,11 @@ def ExtractStrings(df2_1, df2_2):
             # I think that when due to a bug the dictionary become too big it stops growing...
             # SensorDictionary[Sensor] = list(set(SensorStringResult))
             StringListForCurrentSensor = list(set(SensorStringResult))
-            
+
             # Debugging
             # print (list(set(SensorStringResult)))
             # Debugging
-            
+
             # print ('Sensor: ' + Sensor + ' Processed')
 
             # Adding String for Sensor to General String List
@@ -219,7 +219,7 @@ def ExtractStrings(df2_1, df2_2):
 
             # Removing Duplicate Strings
             AllSensorsStringList = list(set(AllSensorsStringList))
-            
+
             print ('These are all the strings found in Sensor ' + Sensor + ': ' + str(StringListForCurrentSensor))
     return (AllSensorsStringList)
 
@@ -231,7 +231,7 @@ def SetIndex(df2):
     # Create two dataframes df1 only with tags and descriptions. df2 tag with values
     df2_1 = df2[0:1]  # FIRST ROW
     df2_2 = df2[1:len(df2)]  # SECOND TO LAST ROW
-    
+
     # Indexing dataframe df1
     df2_1 = df2_1.set_index('DATETIME')
 
@@ -264,7 +264,7 @@ def FormatToPrevise(df2_1, df2_2):
 
     # Sort columns by VTQ format
     mdf = mdf[['DATETIME', 'TAGNAME', 'DESCRIPTION', 'VALUE']]
-    
+
     return (mdf)
 
 
@@ -275,7 +275,7 @@ def SplitPreviseFormatCSVFile(mdf,CSVFileList,FinalPath):
     i = 0
     rows = 1000000
     totalRows = len(mdf)
-    loops = math.ceil(totalRows/rows) + 1
+    loops = math.ceil(totalRows/rows)
 
     if totalRows > 1000000:
         for j in range(loops): #need to round this
@@ -284,26 +284,46 @@ def SplitPreviseFormatCSVFile(mdf,CSVFileList,FinalPath):
             a = (rows*j) - rows
             if totalRows <= rows:
                 b = totalRows
-                print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' Historian File')
+                print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) +
+                      ' Historian File')
                 print("")
-                mdf[a:b].to_csv(FinalPath + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted.csv', index=False)
+                mdf[a:b].to_csv(FinalPath + '/' + str(CSVFileList[i].replace(
+                                '.csv', '')) + '_Formatted.csv', index=False)
             else:
                 if (rows*j) >= totalRows:
                     b = totalRows
-                    print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' chunk' + str(j) + ' Historian File')
+                    print('Exporting '
+                          + str(CSVFileList[i].replace('.csv', ''))
+                          + ' chunk' + str(j)
+                          + ' Historian File')
                     print("")
-                    mdf[a:b].to_csv(FinalPath + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
+                    mdf[a:b].to_csv(FinalPath + '/'
+                       + str(CSVFileList[i].replace('.csv', ''))
+                       + '_Formatted_chunk' + str(j)
+                       + '.csv', index=False)
                 else:
                     b = (rows*j) - 1
-                    print('Exporting ' + str(CSVFileList[i].replace('.csv', '')) + ' chunk' + str(j) + ' Historian File')
+                    print('Exporting '
+                          + str(CSVFileList[i].replace('.csv', ''))
+                          + ' chunk' + str(j) + ' Historian File')
                     print("")
-                    mdf[a:b].to_csv(FinalPath + '/' + str(CSVFileList[i].replace('.csv', '')) + '_Formatted_chunk' + str(j) + '.csv', index=False)
+                    mdf[a:b].to_csv(FinalPath + '/'
+                       + str(CSVFileList[i].replace('.csv', ''))
+                       + '_Formatted_chunk' + str(j)
+                       + '.csv', index=False)
     else:
-        mdf.to_csv(FinalPath + '/' + str(CSVFileList[0].replace('.csv', '')) + '_Formatted' + '.csv', index=False)
+        mdf.to_csv(FinalPath + '/'
+                   + str(CSVFileList[0].replace('.csv', ''))
+                   + '_Formatted' + '.csv', index=False)
     return
 
 # In[10]:
-    
+
 def ReplaceStrings(df2_2,StringListDict):
     df2_2.replace(StringListDict, inplace=True, regex=True)
     return(df2_2)
+
+def ExportTagNamesToCSV (df_concat, FinalPath):
+    for j in range(len(df_concat.columns)):
+        df_concat.iloc[:,[j]].to_csv(FinalPath + '/' + df_concat.columns[j]
+                        + '.csv', index=True)

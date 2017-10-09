@@ -71,7 +71,7 @@ else:
 # Convert all strings to a Dictionary
 StringListDict = {}.fromkeys(StringListForAllSensors, 'null')
 
-print ("# Run following line to see the list of Strings")
+# print ("# Run following line to see the list of Strings")
 ## Copy the result and paste it in the following line of code")
 print (StringListDict)
 
