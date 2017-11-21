@@ -16,7 +16,9 @@ from os import listdir
 import pandas as pd
 import math
 import numpy as np
-
+import seaborn as sns
+import matplotlib.pyplot as plt
+# %matplotlib inline
 # In[0]:
 
 def GetCSVList(CSVPath1):
@@ -220,6 +222,13 @@ def ExtractStrings(df2_1, df2_2):
             # Removing Duplicate Strings
             AllSensorsStringList = list(set(AllSensorsStringList))
 
+            result = {}
+
+            for key,value in StringListDict.items():
+                if value not in result.values():
+                    result[key] = value
+
+            print (result)
             print ('These are all the strings found in Sensor ' + Sensor + ': ' + str(StringListForCurrentSensor))
     return (AllSensorsStringList)
 
@@ -327,3 +336,28 @@ def ExportTagNamesToCSV (df_concat, FinalPath):
     for j in range(len(df_concat.columns)):
         df_concat.iloc[:,[j]].to_csv(FinalPath + '/' + df_concat.columns[j]
                         + '.csv', index=True)
+
+def GetLowStdDevSensors(df, path, StringDict):
+
+    StringListDict_NaN = {'null': np.NaN}
+    # Replacing null with numpy null
+    df_NaN = ReplaceStrings(df, StringDict)
+
+    # df['Ticks'] = range(0,len(df.index.values))
+    StdDevAll = df_NaN.std(ddof=0).sort_values()
+    StdDevAll_Below_1 = StdDevAll[StdDevAll<1]
+    print('These are the sensors and StdDev for each below 1')
+    print(StdDevAll_Below_1)
+    StdDevAll_Below_1_df = pd.DataFrame(StdDevAll_Below_1).reset_index()
+    StdDevAll_Below_1_df.columns = ['Sensors', 'Values']
+    StdDevAll_Below_1_df = StdDevAll_Below_1_df.set_index('Sensors').T.columns
+
+    print('Proceeding to export sensors with StdDev below 1 to PNG image')
+    for i in range(len(StdDevAll_Below_1_df)):
+        plt.plot_date(x=df_NaN['DATETIME'], y=df_NaN[StdDevAll_Below_1_df[i]], fmt="r-")
+        plt.xlabel('DATETIME')
+        plt.ylabel(StdDevAll_Below_1_df[i])
+        plt.title('Instrument ' + df_NaN.columns[i] + ' Process Data')
+        plt.savefig(path + StdDevAll_Below_1_df[i] +'.png', transparent = False, bbox_inches = 'tight', dpi = 300)
+        plt.show()
+    return (StdDevAll_Below_1_df)
