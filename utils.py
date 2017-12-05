@@ -222,13 +222,14 @@ def ExtractStrings(df2_1, df2_2):
             # Removing Duplicate Strings
             AllSensorsStringList = list(set(AllSensorsStringList))
 
-            result = {}
+			#**
+			# The next lines will be disabled since I dont remember what they were for
+            # result = {}
+            # for key,value in StringListDict.items():
+                # if value not in result.values():
+                    # result[key] = value
 
-            for key,value in StringListDict.items():
-                if value not in result.values():
-                    result[key] = value
-
-            print (result)
+            # print (result)
             print ('These are all the strings found in Sensor ' + Sensor + ': ' + str(StringListForCurrentSensor))
     return (AllSensorsStringList)
 
