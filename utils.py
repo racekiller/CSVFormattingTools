@@ -335,7 +335,24 @@ def ReplaceStrings(df2_2,StringListDict):
 
 def ExportTagNamesToCSV (df_concat, FinalPath):
     for j in range(len(df_concat.columns)):
-        df_concat.iloc[:,[j]].to_csv(FinalPath + '/' + df_concat.columns[j]
+        
+        # Getting the tagname
+        TagName = df_concat.columns[j]
+
+        # Getting the tag Description
+        TagDescriptionArray = df_concat.iloc[[0]][TagName].values
+        TagDescription = TagDescriptionArray[0]
+        
+        df = df_concat.iloc[:,[j]]
+        
+        # Drop description from dataframe to be added as a column
+        df.drop(df.index[0], inplace=True)
+        df['TAGNAME'] = TagName
+        df['TAGDESCRIPTION'] = TagDescription
+
+        df = df.rename(columns = {TagName:'TAGVALUE'})
+
+        df.to_csv(FinalPath + '/' + df_concat.columns[j]
                         + '.csv', index=True)
 
 def GetLowStdDevSensors(df, path, StringDict):
