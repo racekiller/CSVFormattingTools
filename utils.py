@@ -54,6 +54,7 @@ def RenameColumn(df2):
 # Ranane Date and time column to DATETIME
     new_cols = ['DATETIME']
     df2.rename(columns=dict(zip(df2.columns[[0]], new_cols)),inplace=True)
+    df2.iloc[0,1] = ""
     return
 
 
@@ -335,16 +336,16 @@ def ReplaceStrings(df2_2,StringListDict):
 
 def ExportTagNamesToCSV (df_concat, FinalPath):
     for j in range(len(df_concat.columns)):
-        
+
         # Getting the tagname
         TagName = df_concat.columns[j]
 
         # Getting the tag Description
         TagDescriptionArray = df_concat.iloc[[0]][TagName].values
         TagDescription = TagDescriptionArray[0]
-        
+
         df = df_concat.iloc[:,[j]]
-        
+
         # Drop description from dataframe to be added as a column
         df.drop(df.index[0], inplace=True)
         df['TAGNAME'] = TagName
