@@ -31,7 +31,7 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
         self.ListOfSensors.clear()
         self.ListOfTextFound.clear()
 
-        ToBeProcessedFolder = "/Users/jvivas/Documents/Aspen/TJ/to be processed"
+        # ToBeProcessedFolder = "/Users/jvivas/Documents/Aspen/TJ/to be processed"
         CSVFileList = GetCSVList(ToBeProcessedFolder)
         CSVFile = CSVFileList[0]
         CSVFileWithPath = ToBeProcessedFolder + "/" + CSVFileList[0]
@@ -82,10 +82,17 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
         for i in range(len(StringListForAllSensors)):
             #print(StringListForAllSensors[i])
             #print(str(i))
-            self.TextPerSensorTable.setItem(0, i, QtWidgets.QTableWidgetItem(StringListForAllSensors[i]))
+            self.TextPerSensorTable.setItem(i, 0, QtWidgets.QTableWidgetItem(StringListForAllSensors[i]))
 
-            #this is how we read from the table
-            print(self.TextPerSensorTable.item(0,0).text())
+        #this is how we read from the table
+                # update StringListDict with numbers input from user
+        i = 0
+        for Text in StringListDict:
+            StringListDict[Text] = self.TextPerSensorTable.item(0,i).text()
+            i = i + 1
+            # print(self.TextPerSensorTable.item(0,i).text())
+        print(StringListDict)
+
 
 
 def main():
