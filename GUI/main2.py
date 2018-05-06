@@ -12,6 +12,7 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
         self.BtnRAWFiles.clicked.connect(self.browse_folder_tobeprocessed)
         self.BtnPathPROCFiles.clicked.connect(self.browse_folder_processed)
         self.BtnReadCSV.clicked.connect(self.ReadCSVfile)
+        self.BtnReplaceText.clicked.connect(self.Replace_text)
 
     def browse_folder_tobeprocessed(self):
         global ToBeProcessedFolder
@@ -28,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
         print(ProcessedFolder)
 
     def ReadCSVfile(self):
+        global StringListDict
         self.ListOfSensors.clear()
         self.ListOfTextFound.clear()
 
@@ -83,17 +85,13 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
             #print(StringListForAllSensors[i])
             #print(str(i))
             self.TextPerSensorTable.setItem(i, 0, QtWidgets.QTableWidgetItem(StringListForAllSensors[i]))
-
-        #this is how we read from the table
-                # update StringListDict with numbers input from user
+        
+    def Replace_text(self):
+        # update StringListDict with numbers input from user
         i = 0
         for Text in StringListDict:
-            StringListDict[Text] = self.TextPerSensorTable.item(0,i).text()
+            StringListDict[Text] = self.TextPerSensorTable.item(i,1).text()
             i = i + 1
-            # print(self.TextPerSensorTable.item(0,i).text())
-        print(StringListDict)
-
-
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
