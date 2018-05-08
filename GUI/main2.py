@@ -93,6 +93,28 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
             StringListDict[Text] = self.TextPerSensorTable.item(i,1).text()
             i = i + 1
 
+        # Replacing text with number or null from user input
+        df2_2 = ReplaceStrings(df2_2, StringListDict)
+
+        # Create dataframe to export individual tags
+        df_final = pd.concat([df2_1, df2_2])
+
+        # Export Individual Tags to CSV
+        print("Creating CSV per TagName")
+        ExportTagNamesToCSV(df_final, ProcessedFolder)
+
+        # Merge dataframes to export to CSV
+        mdf = FormatToPrevise(df2_1, df2_2)
+
+        # Check format data to be exported
+        # print(mdf.head(25))
+
+        # Export to CSV
+        print('Creating CSVs to be imported into Aspen Mtell')
+        SplitPreviseFormatCSVFile(mdf, CSVFileList, ProcessedFolder)
+
+        print("Done, check the processed folder")
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
     form = MainWindow()
