@@ -44,20 +44,20 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
             print('These are all the strings found in the file: ' + str(StringListForAllSensors))
         else:
 
-            df2 = LoadCSV(CSVFileWithPath, CSVFile)
+            self.df2 = LoadCSV(CSVFileWithPath, CSVFile)
 
             # Rename date and time column
             print('Renaming date and time column')
-            RenameColumn(df2)
+            RenameColumn(self.df2)
             # Apply Date and time format to dataframe
             print('Applying date and time format')
-            ApplyDateFormat(df2)
+            ApplyDateFormat(self.df2)
 
             # Apply Index and create two dataframes
-            df2_1, df2_2 = SetIndex(df2)
+            self.df2_1, self.df2_2 = SetIndex(self.df2)
 
             print('Extracting strings from csv file')
-            StringListForAllSensors, ListOfSensors = ExtractStrings(df2_1, df2_2)
+            StringListForAllSensors, ListOfSensors = ExtractStrings(self.df2_1, self.df2_2)
 
             # populate list of sensor in GUI
             for sensor in ListOfSensors:
@@ -98,18 +98,18 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
         print(StringListDict)
 
         # Replacing text with number or null from user input
-        df2_2 = ReplaceStrings(df2_2, StringListDict)
+        self.df2_2 = ReplaceStrings(self.df2_2, StringListDict)
 
         # Create dataframe to export individual tags
-        df_final = pd.concat([df2_1, df2_2])
+        self.df_final = pd.concat([self.df2_1, self.df2_2])
 
     def CreateCSVFiles(self):
         # Export Individual Tags to CSV
         print("Creating CSV per TagName")
-        ExportTagNamesToCSV(df_final, ProcessedFolder)
+        ExportTagNamesToCSV(self.df_final, ProcessedFolder)
 
         # Merge dataframes to export to CSV
-        mdf = FormatToPrevise(df2_1, df2_2)
+        mdf = FormatToPrevise(self.df2_1, self.df2_2)
 
         # Check format data to be exported
         # print(mdf.head(25))
