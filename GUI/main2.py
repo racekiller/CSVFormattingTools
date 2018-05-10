@@ -13,30 +13,31 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
         self.BtnPathPROCFiles.clicked.connect(self.browse_folder_processed)
         self.BtnReadCSV.clicked.connect(self.ReadCSVfile)
         self.BtnReplaceText.clicked.connect(self.Replace_text)
+        self.BtnGenerateMtellFiles.clicked.connect(self.CreateCSVFiles)
 
     def browse_folder_tobeprocessed(self):
-        global ToBeProcessedFolder
+        # global ToBeProcessedFolder
         self.ToBeProcessedPath.clear()
-        ToBeProcessedFolder = QtWidgets.QFileDialog.getExistingDirectory(self, "Pick a folder")
-        self.ToBeProcessedPath.addItem(ToBeProcessedFolder)
-        print(ToBeProcessedFolder)
+        self.ToBeProcessedFolder = QtWidgets.QFileDialog.getExistingDirectory(self, "Pick a folder")
+        self.ToBeProcessedPath.addItem(self.ToBeProcessedFolder)
+        print(self.ToBeProcessedFolder)
 
     def browse_folder_processed(self):
-        global ProcessedFolder
+        # global ProcessedFolder
         self.ProcessedPath.clear()
-        ProcessedFolder = QtWidgets.QFileDialog.getExistingDirectory(self, "Pick a folder")
-        self.ProcessedPath.addItem(ProcessedFolder)
-        print(ProcessedFolder)
+        self.ProcessedFolder = QtWidgets.QFileDialog.getExistingDirectory(self, "Pick a folder")
+        self.ProcessedPath.addItem(self.ProcessedFolder)
+        print(self.ProcessedFolder)
 
     def ReadCSVfile(self):
-        global StringListDict, CSVFileList
+        # global StringListDict, CSVFileList
         self.ListOfSensors.clear()
         self.ListOfTextFound.clear()
 
         # ToBeProcessedFolder = "/Users/jvivas/Documents/Aspen/TJ/to be processed"
-        CSVFileList = GetCSVList(ToBeProcessedFolder)
-        CSVFile = CSVFileList[0]
-        CSVFileWithPath = ToBeProcessedFolder + "/" + CSVFileList[0]
+        self.CSVFileList = GetCSVList(self.ToBeProcessedFolder)
+        CSVFile = self.CSVFileList[0]
+        CSVFileWithPath = self.ToBeProcessedFolder + "/" + self.CSVFileList[0]
         csvFileSizeGB = GetFileSize(CSVFileWithPath)
 
         if csvFileSizeGB > 1:
@@ -70,10 +71,10 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
             print('These are all the strings found in the csv file: ' + str(StringListForAllSensors))
 
         # Convert all strings to a Dictionary
-        StringListDict = {}.fromkeys(StringListForAllSensors, 'null')
+        self.StringListDict = {}.fromkeys(StringListForAllSensors, 'null')
 
         # print ("# Run following line to see the list of Strings")
-        print(StringListDict)
+        print(self.StringListDict)
 
         # Fill in table with Text and get input number from user
 
@@ -90,15 +91,15 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
 
         # update StringListDict with numbers input from user
         i = 0
-        for Text in StringListDict:
-            StringListDict[Text] = self.TextPerSensorTable.item(i,1).text()
+        for Text in self.StringListDict:
+            self.StringListDict[Text] = self.TextPerSensorTable.item(i,1).text()
             i = i + 1
 
         # printing text vs number
-        print(StringListDict)
+        print(self.StringListDict)
 
         # Replacing text with number or null from user input
-        self.df2_2 = ReplaceStrings(self.df2_2, StringListDict)
+        self.df2_2 = ReplaceStrings(self.df2_2, self.StringListDict)
 
         # Create dataframe to export individual tags
         self.df_final = pd.concat([self.df2_1, self.df2_2])
@@ -106,7 +107,7 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
     def CreateCSVFiles(self):
         # Export Individual Tags to CSV
         print("Creating CSV per TagName")
-        ExportTagNamesToCSV(self.df_final, ProcessedFolder)
+        ExportTagNamesToCSV(self.df_final, self.ProcessedFolder)
 
         # Merge dataframes to export to CSV
         mdf = FormatToPrevise(self.df2_1, self.df2_2)
@@ -116,7 +117,7 @@ class MainWindow(QtWidgets.QMainWindow, mainwindow2.Ui_MainWindow):
 
         # Export to CSV
         print('Creating CSVs to be imported into Aspen Mtell')
-        SplitPreviseFormatCSVFile(mdf, CSVFileList, ProcessedFolder)
+        SplitPreviseFormatCSVFile(mdf, self.CSVFileList, self.ProcessedFolder)
 
         print("Done, check the processed folder")
 
